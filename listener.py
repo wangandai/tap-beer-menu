@@ -4,11 +4,22 @@ import logging
 import telegram_bot_handlers as handlers
 import config
 
+"""
+commands:
+start - Get welcome message
+menu - Get today's menu
+shouldigo - Check if today is worth going
+subscribe - Subscribe to notifications on whether worth going
+unsubscribe - Unsubscribe to notifications
+"""
+
 
 def init_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('start', handlers.start))
     dispatcher.add_handler(CommandHandler('menu', handlers.get_menu))
-    dispatcher.add_handler(CommandHandler('shouldgo', handlers.should_go))
+    dispatcher.add_handler(CommandHandler('shouldigo', handlers.should_go))
+    dispatcher.add_handler(CommandHandler('subscribe', handlers.subscribe))
+    dispatcher.add_handler(CommandHandler('unsubscribe', handlers.unsubscribe))
 
 
 def main():
