@@ -12,3 +12,27 @@ def get_menu(bot, update):
     for i, beer in enumerate(m):
         text += "{}. {} ({}) - {}% ABV\n".format(i+1, beer["name"], beer["style"], beer["abv"])
     bot.send_message(chat_id=update.message.chat_id, text=text)
+
+
+def good_beers(bot, update):
+    pass
+
+
+def abv(bot, update):
+    pass
+
+
+def change_abv(bot, update):
+    pass
+
+
+def add_good_beers(bot, update):
+    pass
+
+
+def remove_good_beers(bot, update):
+    pass
+
+
+def should_go(bot, update):
+    m = menu.get_today_menu()
