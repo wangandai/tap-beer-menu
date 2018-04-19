@@ -104,5 +104,5 @@ ENV/
 .idea
 .idea/
 
-# Secrets
-secrets.txt
+# config
+config.json
