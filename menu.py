@@ -3,6 +3,7 @@ import re
 import html
 
 
+# Retrieves the menu for today
 def get_today_menu():
     # Get menu location
     headers = {
@@ -43,3 +44,25 @@ def get_today_menu():
         )
 
     return beers
+
+
+# Returns: is_worth_going(bool), beers(dict)
+def is_worth_going(menu):
+    good_beers = []
+    for beer in menu:
+        if is_good_brand(beer["name"]) and is_abv_high_enough(beer["abv"]):
+            good_beers.append(beer)
+
+    return len(good_beers) > 0, good_beers
+
+
+def is_good_brand(name):
+    good_beers_list = ["deschutes", "founders", "brewlander", "stone", "cloudwater", "rouge", "heretic", "omnipollo"]
+    for brand in good_beers_list:
+        if brand in str.lower(name).split(" "):
+            return True
+    return False
+
+
+def is_abv_high_enough(abv):
+    return abv >= 8.0
