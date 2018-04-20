@@ -18,7 +18,7 @@ def get_menu(bot, update):
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
     m = mm.get_menu_of("tap")
-    text = util.beer_list_in_text(m)
+    text = util.beer_list_in_text(m.beers)
     bot.send_message(chat_id=chat_id, text=text)
 
 
@@ -26,11 +26,12 @@ def should_i_go(bot, update):
     logging.info("telegram_bot_handlers.should_i_go called")
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
-    worth, beers = mm.get_menu_of("tap").is_worth_going()
-    if not worth:
+    menu = mm.get_menu_of("tap")
+
+    if not menu.is_worth_going():
         text = "No, its shit today."
     else:
-        text = "Yes, go today. The good beers are:\n" + util.beer_list_in_text(beers)
+        text = "Yes, go today. The good beers are:\n" + util.beer_list_in_text(menu.good_beers)
     bot.send_message(chat_id=chat_id, text=text)
 
 

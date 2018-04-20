@@ -8,7 +8,7 @@ from entities.beer import Beer
 
 # Returns array of Beer objects
 def request_menu():
-    logging.debug("Retrieving TAP Craft Beer Menu")
+    logging.info("Retrieving TAP Craft Beer Menu")
     try:
         # Get menu location
         headers = {
@@ -42,7 +42,7 @@ def request_menu():
         for beer_group in beer_groups:
             beers.append(Beer(beer_group[1], beer_group[2], float(beer_group[3])))
 
-        logging.debug("Retrieved {} beers from Tap Craft Beer.".format(len(beers)))
+        logging.info("Retrieved {} beers from Tap Craft Beer.".format(len(beers)))
         return beers
     except:
         logging.error("Error getting Tap Craft Beer menu: {}".format(sys.exc_info()[0]))

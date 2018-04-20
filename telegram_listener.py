@@ -3,6 +3,7 @@ from telegram.ext import CommandHandler
 import logging
 import telegram_bot.telegram_bot_handlers as h
 import config.config as cfg
+from logger_setup import setup_logger
 
 """
 commands:
@@ -23,8 +24,7 @@ def init_handlers(dispatcher):
 
 
 def main():
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO,
-                        filename=cfg.listener_log)
+    setup_logger(cfg.listener_log)
 
     updater = Updater(token=cfg.get_bot_token())
     dispatcher = updater.dispatcher

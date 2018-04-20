@@ -11,9 +11,9 @@ listener_log = "logs/listener.log"
 server_log = "logs/server.log"
 
 # Menu config
-cutoff_abv = 8.0
+cutoff_abv = 4.0
 good_brands = ["deschutes", "founders", "brewlander", "stone", "cloudwater", "rouge", "heretic", "omnipollo"]
-
+bars = ["tap"]
 
 def get_bot_token():
     try:

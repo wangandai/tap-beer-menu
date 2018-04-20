@@ -1,21 +1,20 @@
 import logging
-import menu_apis.tap_api as tap
+import config.config as cfg
 from entities.menu import Menu
 
 
 class MenuReader:
     menus = {}
-    menu_apis = {"tap": tap.request_menu}
 
     def __init__(self):
-        logging.info("MenuManager: Initializing MenuManager")
-        for bar in self.menu_apis.keys():
+        logging.info("MenuReader: Initializing MenuManager")
+        for bar in cfg.bars:
             self.menus[bar] = Menu(bar)
 
-    def update_menu(self, menu_name):
-        logging.info("MenuManager: Updating menus")
+    def refresh_menu(self, menu_name):
+        logging.info("MenuReader: Updating menus")
         if self.menus.get(menu_name) is not None:
-            self.menus[menu_name].update_beers(self.menu_apis[menu_name]())
+            self.menus[menu_name].load_beers_from_file()
 
     def menu_list(self):
         return self.menus.keys()
