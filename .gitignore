@@ -104,6 +104,6 @@ ENV/
 .idea
 .idea/
 
-# json files
-config.json
-currentmenu.json
+# data files
+data/
+key.json

@@ -1,5 +1,6 @@
 import unittest
-import menu
+from entities import menu
+
 
 class TestMenuMethods(unittest.TestCase):
 

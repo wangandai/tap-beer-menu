@@ -1,8 +1,8 @@
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 import logging
-import telegram_bot_handlers as handlers
-import config
+from telegram_bot import telegram_bot_handlers as handlers
+import configurations.config as config
 
 """
 commands:

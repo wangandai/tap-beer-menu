@@ -1,5 +1,5 @@
-import menu
-import telegram_bot_util as util
+from entities import menu
+from telegram_bot import telegram_bot_util as util
 import json
 import sys
 
