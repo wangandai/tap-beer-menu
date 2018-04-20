@@ -1,10 +1,10 @@
-from entities.menu_manager import MenuManager
+from entities.menu_reader import MenuReader
 from entities.subscriber_manager import SubscriberManager
 from telegram_bot import telegram_bot_util as util
 import logging
 
 
-mm = MenuManager()
+mm = MenuReader()
 ss = SubscriberManager()
 
 

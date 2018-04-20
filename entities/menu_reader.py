@@ -3,7 +3,7 @@ import menu_apis.tap_api as tap
 from entities.menu import Menu
 
 
-class MenuManager:
+class MenuReader:
     menus = {}
     menu_apis = {"tap": tap.request_menu}
 
