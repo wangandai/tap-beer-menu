@@ -1,26 +1,32 @@
-from entities import menu
+from entities.menu_manager import MenuManager
+from entities.subscriber_manager import SubscriberManager
 from telegram_bot import telegram_bot_util as util
-import json
-import sys
+import logging
+
+
+mm = MenuManager()
+ss = SubscriberManager()
 
 
 def start(bot, update):
+    logging.info("telegram_bot_handlers.start called")
     bot.send_message(chat_id=update.message.chat_id, text="Hello, I am a bot for you lazy fucks who can't bother to check TAP menu everyday.")
 
 
 def get_menu(bot, update):
+    logging.info("telegram_bot_handlers.get_menu called")
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
-    m = menu.get_today_menu()
+    m = mm.get_menu_of("tap")
     text = util.beer_list_in_text(m)
     bot.send_message(chat_id=chat_id, text=text)
 
 
-def should_go(bot, update):
+def should_i_go(bot, update):
+    logging.info("telegram_bot_handlers.should_i_go called")
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
-    m = menu.get_today_menu()
-    worth, beers = menu.is_worth_going(m)
+    worth, beers = mm.get_menu_of("tap").is_worth_going()
     if not worth:
         text = "No, its shit today."
     else:
@@ -29,46 +35,22 @@ def should_go(bot, update):
 
 
 def subscribe(bot, update):
+    logging.info("telegram_bot_handlers.subscribe called")
     chat_id = update.message.chat_id
-
     try:
-        try:
-            subscribers = json.load(open("subscribers.json"))["subscribers"]
-        except IOError:
-            subscribers = []
-
-        if chat_id not in subscribers:
-            subscribers.append(chat_id)
-            save_object = {"subscribers": subscribers}
-            with open("subscribers.json", "w+") as f:
-                f.write(json.dumps(save_object))
-            bot.send_message(chat_id=chat_id, text="You have been successfully subscribed.")
-        else:
-            bot.send_message(chat_id=chat_id, text="You have already subscribed.")
+        ss.subscribe(chat_id)
+        message = "You have been successfully subscribed."
     except:
-        bot.send_message(chat_id=update.message.chat_id, text="Subscription not successful")
-        print("Unexpected error:", sys.exc_info()[0])
-        raise
+        message = "You have not been successfully subscribed."
+    bot.send_message(chat_id=chat_id, text=message)
 
 
 def unsubscribe(bot, update):
+    logging.info("telegram_bot_handlers.unsubscribe called")
     chat_id = update.message.chat_id
     try:
-        try:
-            subscribers = json.load(open("subscribers.json"))["subscribers"]
-        except IOError:
-            bot.send_message(chat_id=chat_id, text="You were not subscribed.")
-            return
-
-        if chat_id in subscribers:
-            subscribers.remove(chat_id)
-            save_object = {"subscribers": subscribers}
-            with open("subscribers.json", "w+") as f:
-                f.write(json.dumps(save_object))
-            bot.send_message(chat_id=chat_id, text="You have been successfully un-subscribed.")
-        else:
-            bot.send_message(chat_id=chat_id, text="You were not subscribed.")
+        ss.unsubscribe(chat_id)
+        message = "You have been successfully un-subscribed."
     except:
-        bot.send_message(chat_id=update.message.chat_id, text="Unsubscribe not successful")
-        print("Unexpected error:", sys.exc_info()[0])
-        raise
+        message = "You have not been successfully un-subscribed."
+    bot.send_message(chat_id=chat_id, text=message)

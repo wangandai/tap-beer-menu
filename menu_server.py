@@ -1,6 +1,6 @@
 from telegram.bot import Bot
 import logging
-import configurations
+import config.config as cfg
 import json
 
 
@@ -13,12 +13,9 @@ def load_subscribers():
 def main():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    cfg = configurations.Config()
-    b = Bot(token=cfg.bot_token)
+    b = Bot(token=cfg.get_bot_token())
 
-    subscribers = load_subscribers()
-
-    for subscriber in subscribers:
+    for subscriber in load_subscribers():
         b.send_message(chat_id=subscriber, text="Test message to subscriber")
 
 

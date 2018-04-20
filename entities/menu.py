@@ -1,68 +1,45 @@
-import requests
-import re
-import html
+import logging
+import config.config as cfg
+import json
+import sys
 
 
-# Retrieves the menu for today
-def get_today_menu():
-    # Get menu location
-    headers = {
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    }
-
-    response1 = requests.get('http://menu.tapthat.com.sg/', headers=headers)
-    # print(response1.content)
-
-    response_string = response1.content.decode('utf-8')
-
-    groups = re.search('PreloadEmbedMenu\("menu-container",([0-9]+),([0-9]+)\)', response_string)
-    # print(groups[1], groups[2])
-
-    # Retrieve menu
-    response2 = requests.get('https://business.untappd.com/locations/{}/themes/{}/js'.format(groups[1], groups[2]), headers=headers)
-
-    # print(response.content)
-
-    menu_html = str(response2.content)
-    menu_html = ' '.join(menu_html.replace('\\n', '').replace('\\', '').split())
-    menu_html = html.unescape(menu_html)
-    # print(menu_html)
-
-    beer_regex = re.compile('<!-- Beer Name \+ Style -->.+?<\/span>(.+?)\s<\/a>.+?item-title-color">(.+?)<\/span>.+?"abv">(.+?)%\sABV', re.DOTALL)
-    beer_groups = beer_regex.finditer(menu_html)
-
+class Menu:
+    name = ""
     beers = []
-    for beer_group in beer_groups:
-        beers.append(
-            {
-                'name': beer_group[1],
-                'style': beer_group[2],
-                'abv': float(beer_group[3]),
-            }
-        )
 
-    return beers
+    def __init__(self, name):
+        self.name = name
+        self.load_beers_from_file()
 
+    def update_beers(self, beers):
+        self.beers = beers
 
-# Returns: is_worth_going(bool), beers(dict)
-def is_worth_going(menu):
-    good_beers = []
-    for beer in menu:
-        if is_good_brand(beer["name"]) and is_abv_high_enough(beer["abv"]):
-            good_beers.append(beer)
+    def is_worth_going(self):
+        good_beers = []
+        for beer in self.beers:
+            if beer.is_worth_it():
+                good_beers.append(beer)
+        return len(good_beers) > 0, good_beers
 
-    return len(good_beers) > 0, good_beers
+    def _data_file(self):
+        return cfg.data_directory + self.name + "_menu.json"
 
+    def load_beers_from_file(self):
+        try:
+            m = json.load(open(self._data_file()))
+            self.beers = m["beers"]
+            logging.info("Menu({}) successfully loaded from file.".format(self.name))
+        except IOError as e:
+            logging.info("Data file for {} menu not found: {}".format(self.name, e))
+        except ValueError as e:
+            logging.error("Error reading data file for {} menu: {}".format(self.name, e))
 
-def is_good_brand(name):
-    good_beers_list = ["deschutes", "founders", "brewlander", "stone", "cloudwater", "rouge", "heretic", "omnipollo"]
-    for brand in good_beers_list:
-        if brand in str.lower(name).split(" "):
-            return True
-    return False
-
-
-def is_abv_high_enough(abv):
-    return abv >= 8.0
+    def save_beers_to_file(self):
+        save_data = {"beers": self.beers}
+        try:
+            with open(self._data_file(), "w+") as f:
+                f.write(json.dumps(save_data))
+            logging.info("Menu({}) successfully saved to file.".format(self.name))
+        except:
+            logging.error("Error saving data file for {} menu: {}".format(self.name, sys.exc_info()[0]))
