@@ -25,3 +25,13 @@ class Beer:
 
     def to_string(self):
         return "{} [{}] - {}% ABV".format(self.name, self.type, self.abv)
+
+    def __eq__(self, other):
+        """Override the default Equals behavior"""
+        if isinstance(other, self.__class__):
+            return self.name == other.name and self.type == other.type and self.abv == other.abv
+        return False
+
+    def __ne__(self, other):
+        """Override the default Unequal behavior"""
+        return self.name != other.name or self.type != other.type or self.abv != other.abv

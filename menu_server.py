@@ -25,8 +25,28 @@ def main():
     b = Bot(token=cfg.get_bot_token())
 
     mm = MenuManager()
-    for good_bars in mm.find_good_bars():
-        send_to_subscribers(b, beer_list_in_text(good_bars.good_beers))
+
+    def notify_good_bars():
+        good_bars = mm.find_good_bars()
+        if len(good_bars) > 0:
+            for good_bar in good_bars:
+                send_to_subscribers(b, "GOOD BEERS TODAY!!!\n" + beer_list_in_text(good_bar.good_beers))
+
+    def refresh_menus():
+        mm.update_menus()
+
+    schedule.every().day.at("12:55").do(refresh_menus)
+    schedule.every().day.at("13:00").do(notify_good_bars)
+    schedule.every().day.at("14:55").do(refresh_menus)
+    schedule.every().day.at("15:00").do(notify_good_bars)
+
+    # For testing
+    # schedule.run_all(5)
+
+    logging.info("Sleeping.")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":

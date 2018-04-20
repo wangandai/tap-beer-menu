@@ -9,6 +9,7 @@ class Menu:
     name = ""
     beers = []
     good_beers = []
+    was_updated = True
 
     def __init__(self, name):
         self.name = name
@@ -16,8 +17,21 @@ class Menu:
         self.find_good_beers()
 
     def update_beers(self, beers):
-        self.beers = beers
-        self.find_good_beers()
+        if not self._beer_lists_are_equal(self.beers, beers):
+            self.beers = beers
+            self.find_good_beers()
+            self.was_updated = True
+        else:
+            self.was_updated = False
+
+    @staticmethod
+    def _beer_lists_are_equal(list1, list2):
+        if len(list1) != len(list2):
+            return False
+        for i in range(len(list1)):
+            if list1[i] != list2[i]:
+                return False
+        return True
 
     def find_good_beers(self):
         good_beers = []
