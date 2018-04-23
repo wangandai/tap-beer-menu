@@ -10,6 +10,7 @@ class MenuReader:
         logging.info("MenuReader: Initializing MenuManager")
         for bar in cfg.bars:
             self.menus[bar] = Menu(bar)
+            self.menus[bar].load_beers_from_file()
 
     def refresh_menu(self, menu_name):
         logging.info("MenuReader: Updating menus")

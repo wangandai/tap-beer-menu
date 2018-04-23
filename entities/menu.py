@@ -9,27 +9,26 @@ class Menu:
     name = ""
     beers = []
     good_beers = []
-    was_updated = True
+    was_updated = False
 
     def __init__(self, name):
         self.name = name
-        self.load_beers_from_file()
-        self.find_good_beers()
 
     def update_beers(self, beers):
-        if not self._beer_lists_are_equal(self.beers, beers):
+        if self._beers_have_changed(beers):
             self.beers = beers
             self.find_good_beers()
             self.was_updated = True
+            logging.info("Menu({}) was updated.".format(self.name))
         else:
             self.was_updated = False
+            logging.info("Menu({}) was not updated.".format(self.name))
 
-    @staticmethod
-    def _beer_lists_are_equal(list1, list2):
-        if len(list1) != len(list2):
+    def _beers_have_changed(self, new_beers):
+        if len(self.beers) != len(new_beers):
             return False
-        for i in range(len(list1)):
-            if list1[i] != list2[i]:
+        for i in range(len(self.beers)):
+            if self.beers[i] != new_beers[i]:
                 return False
         return True
 

@@ -26,7 +26,7 @@ class MenuManager:
     def find_good_bars(self):
         worth_going_menus = []
         for m in self.menus:
-            logging.info(m.was_updated)
+            logging.info("Menu({}) updated since last checked: {}".format(m.name, m.was_updated))
             if m.is_worth_going() and m.was_updated:
                 worth_going_menus.append(m)
         return worth_going_menus

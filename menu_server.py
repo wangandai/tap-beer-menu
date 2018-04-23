@@ -29,24 +29,26 @@ def main():
     def notify_good_bars():
         good_bars = mm.find_good_bars()
         if len(good_bars) > 0:
+            message = "Theres good beers today.\n\n"
             for good_bar in good_bars:
-                send_to_subscribers(b, "GOOD BEERS TODAY!!!\n" + beer_list_in_text(good_bar.good_beers))
+                message += "At {} bar:\n{}".format(good_bar.name, beer_list_in_text(good_bar.good_beers))
+            send_to_subscribers(b, message)
 
     def refresh_menus():
         mm.update_menus()
 
-    schedule.every().day.at("12:55").do(refresh_menus)
+    # schedule.every().day.at("12:55").do(refresh_menus)
     schedule.every().day.at("13:00").do(notify_good_bars)
     schedule.every().day.at("14:55").do(refresh_menus)
     schedule.every().day.at("15:00").do(notify_good_bars)
 
     # For testing
-    # schedule.run_all(5)
+    schedule.run_all(5)
 
     logging.info("Sleeping.")
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(50)
 
 
 if __name__ == "__main__":
