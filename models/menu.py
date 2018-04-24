@@ -2,7 +2,7 @@ import logging
 import config.config as cfg
 import json
 import sys
-from entities.beer import Beer
+from models.beer import Beer
 
 
 class Menu:
@@ -26,11 +26,11 @@ class Menu:
 
     def _beers_have_changed(self, new_beers):
         if len(self.beers) != len(new_beers):
-            return False
+            return True
         for i in range(len(self.beers)):
             if self.beers[i] != new_beers[i]:
-                return False
-        return True
+                return True
+        return False
 
     def find_good_beers(self):
         good_beers = []
@@ -44,7 +44,7 @@ class Menu:
         return len(self.good_beers) > 0
 
     def _data_file(self):
-        return cfg.data_directory + self.name + "_menu.json"
+        return cfg.data_directory + str.lower(self.name).replace(" ", "") + "_menu.json"
 
     def load_beers_from_file(self):
         try:
@@ -57,10 +57,11 @@ class Menu:
             logging.error("Error reading data file for {} menu: {}".format(self.name, e))
 
     def save_beers_to_file(self):
-        save_data = {"beers": [beer.__dict__ for beer in self.beers]}
+        save_data = {"name": self.name, "beers": [beer.__dict__ for beer in self.beers]}
+        logging.debug(save_data)
         try:
             with open(self._data_file(), "w+") as f:
-                json.dump(save_data, f)
+                json.dump(save_data, f, indent=4)
             logging.info("Menu({}) successfully saved to file.".format(self.name))
         except:
             print(save_data)

@@ -3,7 +3,7 @@ import re
 import html
 import logging
 import sys
-from entities.beer import Beer
+from models.beer import Beer
 
 
 # Returns array of Beer objects

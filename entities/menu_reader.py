@@ -1,6 +1,7 @@
 import logging
 import config.config as cfg
-from entities.menu import Menu
+from models.menu import Menu
+import menu_apis.apis as apis
 
 
 class MenuReader:
@@ -8,9 +9,9 @@ class MenuReader:
 
     def __init__(self):
         logging.info("MenuReader: Initializing MenuManager")
-        for bar in cfg.bars:
-            self.menus[bar] = Menu(bar)
-            self.menus[bar].load_beers_from_file()
+        for api in apis.bars.keys():
+            self.menus[api] = Menu(api)
+            self.menus[api].load_beers_from_file()
 
     def refresh_menu(self, menu_name):
         logging.info("MenuReader: Updating menus")

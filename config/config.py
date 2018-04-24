@@ -13,7 +13,7 @@ server_log = "logs/server.log"
 # Menu config
 cutoff_abv = 7.0
 good_brands = ["deschutes", "founders", "brewlander", "stone", "cloudwater", "rouge", "heretic", "omnipollo"]
-bars = ["tap"]
+
 
 def get_bot_token():
     try:
