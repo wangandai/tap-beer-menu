@@ -1,5 +1,5 @@
 from telegram.ext import Updater
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, ConversationHandler, CallbackQueryHandler
 import logging
 import telegram_bot.telegram_bot_handlers as h
 import config.config as cfg
@@ -16,9 +16,23 @@ unsubscribe - Unsubscribe to notifications
 
 
 def init_handlers(dispatcher):
+    dispatcher.add_handler(ConversationHandler(
+        entry_points=[CommandHandler('menu', h.which_bar)],
+        states={
+            h.BAR_SELECTED: [CallbackQueryHandler(h.get_menu)]
+        },
+        fallbacks=[CommandHandler('menu', h.which_bar)],
+        allow_reentry=True,
+    ))
+    dispatcher.add_handler(ConversationHandler(
+        entry_points=[CommandHandler('shouldigo', h.which_bar)],
+        states={
+            h.BAR_SELECTED: [CallbackQueryHandler(h.should_i_go)]
+        },
+        fallbacks=[CommandHandler('menu', h.which_bar)],
+        allow_reentry=True,
+    ))
     dispatcher.add_handler(CommandHandler('start', h.start))
-    dispatcher.add_handler(CommandHandler('menu', h.get_menu))
-    dispatcher.add_handler(CommandHandler('shouldigo', h.should_i_go))
     dispatcher.add_handler(CommandHandler('subscribe', h.subscribe))
     dispatcher.add_handler(CommandHandler('unsubscribe', h.unsubscribe))
 
