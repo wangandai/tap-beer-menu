@@ -17,7 +17,7 @@ def get_menu(bot, update):
     logging.info("telegram_bot_handlers.get_menu called")
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
-    m = mm.get_menu_of("tap")
+    m = mm.get_menu_of("TAP Craft Beer")
     text = util.beer_list_in_text(m.beers)
     bot.send_message(chat_id=chat_id, text=text)
 
