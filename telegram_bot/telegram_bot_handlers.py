@@ -26,7 +26,7 @@ def should_i_go(bot, update):
     logging.info("telegram_bot_handlers.should_i_go called")
     chat_id = update.message.chat_id
     bot.send_message(chat_id=chat_id, text="Checking...")
-    menu = mm.get_menu_of("tap")
+    menu = mm.get_menu_of("TAP Craft Beer")
 
     if not menu.is_worth_going():
         text = "No, its shit today."
