@@ -17,19 +17,13 @@ unsubscribe - Unsubscribe to notifications
 
 def init_handlers(dispatcher):
     dispatcher.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('menu', h.which_bar)],
+        entry_points=[CommandHandler('menu', h.which_bar),
+                      CommandHandler('shouldigo', h.which_bar)],
         states={
-            h.BAR_SELECTED: [CallbackQueryHandler(h.get_menu)]
+            "menu": [CallbackQueryHandler(h.get_menu)],
+            "shouldigo": [CallbackQueryHandler(h.should_i_go)]
         },
-        fallbacks=[CommandHandler('menu', h.which_bar)],
-        allow_reentry=True,
-    ))
-    dispatcher.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('shouldigo', h.which_bar)],
-        states={
-            h.BAR_SELECTED: [CallbackQueryHandler(h.should_i_go)]
-        },
-        fallbacks=[CommandHandler('menu', h.which_bar)],
+        fallbacks=[],
         allow_reentry=True,
     ))
     dispatcher.add_handler(CommandHandler('start', h.start))

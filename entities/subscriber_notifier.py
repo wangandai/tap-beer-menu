@@ -29,8 +29,7 @@ class SubscriberNotifier:
         else:
             logging.info("No subscribers to notify.")
 
-    def notify_good_bars(self, good_bars_fn):
-        good_bars = good_bars_fn()
+    def notify_good_bars(self, good_bars):
         if len(good_bars) > 0:
             message = "There are good beers today.\n\n"
             for good_bar in good_bars:

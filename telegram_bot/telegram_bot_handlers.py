@@ -9,8 +9,6 @@ from menu_apis.apis import bars
 mm = MenuReader()
 ss = SubscriberManager()
 
-BAR_SELECTED = 1
-
 
 def start(bot, update):
     logging.info("telegram_bot_handlers.start called")
@@ -25,24 +23,25 @@ def which_bar(bot, update):
 
     bot.send_message(chat_id=chat_id, text="Which bar?", reply_markup=reply_markup)
 
-    return BAR_SELECTED
+    return update.message.text[1:]
 
 
 def get_menu(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
-    message_id = query.inline_message_id
+    message_id = query.message.message_id
     requested_bar = query.data
     logging.info("Menu for {} was requested.".format(requested_bar))
 
     m = mm.get_menu_of(requested_bar)
     text = util.beer_list_in_text(m.beers)
-    bot.send_message(chat_id=chat_id, message_id=message_id, text=text)
+    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
 
 
 def should_i_go(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
+    message_id = query.message.message_id
     requested_bar = query.data
     logging.info("ShouldIGo for {} was requested.".format(requested_bar))
 
@@ -51,7 +50,7 @@ def should_i_go(bot, update):
         text = "No, its shit today."
     else:
         text = "Yes, go today. The good beers are:\n" + util.beer_list_in_text(menu.good_beers)
-    bot.send_message(chat_id=chat_id, text=text)
+    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
 
 
 def subscribe(bot, update):

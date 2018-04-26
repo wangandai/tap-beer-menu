@@ -16,10 +16,14 @@ def main():
 
     mm = MenuManager()
 
-    schedule.every().day.at("12:55").do(mm.update_menus)
-    schedule.every().day.at("13:00").do(ss.notify_good_bars, mm.find_good_bars)
-    schedule.every().day.at("14:55").do(mm.update_menus)
-    schedule.every().day.at("15:00").do(ss.notify_good_bars, mm.find_good_bars)
+    def update_job():
+        mm.update_menus()
+        ss.notify_good_bars(mm.find_good_bars())
+
+    update_timings = [str(n) + ":00" for n in range(12, 20)]
+    for t in update_timings:
+        logging.info("Setting up scheduled updates for time: {}".format(t))
+        schedule.every().day.at(t).do(update_job)
 
     # For testing
     # schedule.run_all(5)
