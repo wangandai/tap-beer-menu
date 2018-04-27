@@ -4,6 +4,7 @@ import html
 import logging
 import sys
 from models.beer import Beer
+import traceback
 
 
 # Returns array of Beer objects
@@ -46,4 +47,5 @@ def request_menu():
         return beers
     except:
         logging.error("Error getting Tap Craft Beer menu: {}".format(sys.exc_info()[0]))
+        traceback.print_exc()
         return []
