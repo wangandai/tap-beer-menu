@@ -26,7 +26,7 @@ def request_menu():
         # print(groups[1], groups[2])
 
         # Retrieve menu
-        response2 = requests.get('https://business.untappd.com/locations/{}/themes/{}/js'.format(groups[1], groups[2]), headers=headers)
+        response2 = requests.get('https://business.untappd.com/locations/{}/themes/{}/js'.format(groups.group(1), groups.group(2)), headers=headers)
 
         # print(response.content)
 
@@ -40,7 +40,7 @@ def request_menu():
 
         beers = []
         for beer_group in beer_groups:
-            beers.append(Beer(beer_group[1], beer_group[2], float(beer_group[3])))
+            beers.append(Beer(beer_group.group(1), beer_group.group(2), float(beer_group.group(3))))
 
         logging.info("Retrieved {} beers from Tap Craft Beer.".format(len(beers)))
         return beers
