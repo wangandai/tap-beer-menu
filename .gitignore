@@ -104,6 +104,5 @@ ENV/
 .idea
 .idea/
 
-# data files
-data/
+# key files
 key.json

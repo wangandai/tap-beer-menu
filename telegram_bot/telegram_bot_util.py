@@ -24,7 +24,8 @@ def build_menu(buttons,
 
 def get_command(text):
     pattern = re.compile("\/(.+?)(?:@.*|\Z)")
-    try:
-        return pattern.search(text)[1]
-    except IndexError:
+    matched = pattern.match(text)
+    if matched:
+        return matched.group(1)
+    else:
         return text

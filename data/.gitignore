@@ -1,0 +1,4 @@
+*
+!.gitignore
+!subscribers.json
+!subscriber-backup.json
