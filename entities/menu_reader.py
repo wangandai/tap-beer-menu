@@ -1,5 +1,4 @@
 import logging
-import config.config as cfg
 from models.menu import Menu
 import menu_apis.apis as apis
 
