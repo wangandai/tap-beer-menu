@@ -1,3 +1,6 @@
+import re
+
+
 def beer_list_in_text(beers):
     if len(beers) == 0:
         return "No beers available."
@@ -17,3 +20,11 @@ def build_menu(buttons,
     if footer_buttons:
         menu.append(footer_buttons)
     return menu
+
+
+def get_command(text):
+    pattern = re.compile("\/(.+?)(?:@.*|\Z)")
+    try:
+        return pattern.search(text)[1]
+    except IndexError:
+        return text

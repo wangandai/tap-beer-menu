@@ -22,8 +22,7 @@ def which_bar(bot, update):
     reply_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=1))
 
     bot.send_message(chat_id=chat_id, text="Which bar?", reply_markup=reply_markup)
-
-    return update.message.text[1:]
+    return util.get_command(update.message.text)
 
 
 def get_menu(bot, update):
