@@ -21,21 +21,21 @@ def get_from_untapped(untappd_url):
     r1 = requests.get(untappd_url, headers=h1)
     print(r1.content)
 
-    # h2 = {
-    #     'accept-language': 'en-US,en;q=0.9',
-    #     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-    #     'accept': 'application/json, text/javascript, */*; q=0.01',
-    #     'referer': untappd_url,
-    #     'authority': 'untappd.com',
-    #     'x-requested-with': 'XMLHttpRequest',
-    # }
-    #
-    # params = (
-    #     ('section_id', '47585901'),
-    # )
-    #
-    # r2 = requests.get('https://untappd.com/venue/more_menu/2887707/15', headers=h2, params=params, cookies=r1.cookies)
-    # print(r2.content)
+    h2 = {
+        'accept-language': 'en-US,en;q=0.9',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'referer': untappd_url,
+        'authority': 'untappd.com',
+        'x-requested-with': 'XMLHttpRequest',
+    }
+
+    params = (
+        ('section_id', '47585901'),
+    )
+
+    r2 = requests.get('https://untappd.com/venue/more_menu/2887707/15', headers=h2, params=params, cookies=r1.cookies)
+    print(r2.content)
 
 
 get_from_untapped('https://untappd.com/v/tap-craft-beer-bar/2887707')
