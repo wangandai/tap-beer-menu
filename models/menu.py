@@ -2,67 +2,81 @@ import logging
 import config.config as cfg
 import json
 import sys
-from models.beer import Beer
+from models.menu_section import MenuSection
+from models.util import are_lists_equal
 
 
 class Menu:
-    name = ""
-    beers = []
-    good_beers = []
-    was_updated = False
+    bar = ""
+    sections = None
+    __time_updated = None
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, bar="", sections=None):
+        self.bar = bar
+        self.sections = sections
+        if self.sections is None:
+            self.sections = []
 
-    def update_beers(self, beers):
-        if self._beers_have_changed(beers):
-            self.beers = beers
-            self.find_good_beers()
-            self.was_updated = True
-            logging.info("Menu({}) was updated.".format(self.name))
-        else:
-            self.was_updated = False
-            logging.info("Menu({}) was not updated.".format(self.name))
-
-    def _beers_have_changed(self, new_beers):
-        if len(self.beers) != len(new_beers):
-            return True
-        for i in range(len(self.beers)):
-            if self.beers[i] != new_beers[i]:
-                return True
-        return False
+    def get_time_updated(self):
+        return self.__time_updated
 
     def find_good_beers(self):
-        good_beers = []
-        for beer in self.beers:
-            if beer.is_worth_it():
-                good_beers.append(beer)
-        self.good_beers = good_beers
-        return good_beers
+        return [{
+            "section": s.title,
+            "good_beers": s.good_beers()
+        } for s in self.sections if len(s.good_beers()) > 0]
 
     def is_worth_going(self):
-        return len(self.good_beers) > 0
+        return len(self.find_good_beers()) > 0
 
-    def _data_file(self):
-        return cfg.data_directory + str.lower(self.name).replace(" ", "") + "_menu.json"
+    def data_file(self):
+        return cfg.open_data_file(str.lower(self.bar).replace(" ", "") + "_menu.json")
 
     def load_beers_from_file(self):
         try:
-            m = json.load(open(self._data_file()))
-            self.beers = [Beer(b["name"], b["type"], b["abv"]) for b in m["beers"]]
-            logging.info("Menu({}) successfully loaded from file.".format(self.name))
+            with open(self.data_file()) as f:
+                m = json.load(f)
+            self.from_dict(m)
+            self.__time_updated = m["__time_updated"]
+            logging.info("Menu({}) successfully loaded from file.".format(self.bar))
         except IOError as e:
-            logging.info("Data file for {} menu not found: {}".format(self.name, e))
+            logging.info("Data file for {} menu not found: {}".format(self.bar, e))
         except ValueError as e:
-            logging.error("Error reading data file for {} menu: {}".format(self.name, e))
+            logging.error("Error reading data file for {} menu: {}".format(self.bar, e))
 
     def save_beers_to_file(self):
-        save_data = {"name": self.name, "beers": [beer.__dict__ for beer in self.beers]}
+        save_data = self.to_dict()
         logging.debug(save_data)
         try:
-            with open(self._data_file(), "w+") as f:
+            with open(self.data_file(), "w+") as f:
                 json.dump(save_data, f, indent=4)
-            logging.info("Menu({}) successfully saved to file.".format(self.name))
-        except:
-            print(save_data)
-            logging.error("Error saving data file for {} menu: {}".format(self.name, sys.exc_info()[0]))
+            logging.info("Menu({}) successfully saved to file.".format(self.bar))
+        except (IOError, ValueError):
+            logging.error(save_data)
+            logging.error("Error saving data file for {} menu: {}".format(self.bar, sys.exc_info()[0]))
+
+    def __eq__(self, other):
+        """Override the default Equals behavior"""
+        if isinstance(other, self.__class__):
+            return self.bar == other.bar and self.__section_list_eq__(other.sections)
+        return False
+
+    def __ne__(self, other):
+        """Override the default Unequal behavior"""
+        return self.bar != other.bar or not self.__section_list_eq__(other.sections)
+
+    def __section_list_eq__(self, other_sections):
+        return are_lists_equal(self.sections, other_sections)
+
+    def to_dict(self):
+        return {
+            "bar": self.bar,
+            "sections": [s.to_dict() for s in self.sections],
+            "__time_updated": self.__time_updated,
+        }
+
+    def from_dict(self, d):
+        self.bar = d["bar"]
+        self.sections = [MenuSection().from_dict(s) for s in d["sections"]]
+        self.__time_updated = d["__time_updated"]
+        return self
