@@ -1,5 +1,4 @@
 import logging
-import models.menu as menu
 import menu_apis.apis as apis
 
 
@@ -8,15 +7,18 @@ class MenuManager:
 
     def __init__(self):
         for bar in apis.bars.keys():
-            new_menu = menu.Menu(bar)
-            new_menu.update_beers(apis.bars[bar]())
+            new_menu = apis.bars[bar]()
             new_menu.save_beers_to_file()
             self.menus.append(new_menu)
         logging.debug("MenuManager: MenuManager Initialized.")
 
     def update_menus(self):
         for m in self.menus:
-            m.update_beers(apis.bars[m.name]())
+            updated_m = apis.bars[m.name]()
+            if m == updated_m:
+                logging.info("Menu({}) has not changed since last checked.".format(m.name))
+                continue
+            m = updated_m
             m.save_beers_to_file()
         logging.info("Menus refreshed.")
 
