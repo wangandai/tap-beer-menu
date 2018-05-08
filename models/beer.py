@@ -17,7 +17,9 @@ class Beer:
         return self.is_good_brand() and self.is_abv_high_enough()
 
     def is_good_brand(self):
-        for word in [*self.name.split(), self.brewery]:
+        keywords = self.name.split()
+        keywords.append(self.brewery)
+        for word in keywords:
             if str.lower(word) in cfg.good_brands:
                 return True
         return False
