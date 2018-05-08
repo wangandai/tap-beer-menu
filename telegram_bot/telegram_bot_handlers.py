@@ -12,7 +12,7 @@ ss = SubscriberManager()
 
 def start(bot, update):
     logging.info("telegram_bot_handlers.start called")
-    bot.send_message(chat_id=update.message.chat_id, text="Hello, I am a bot for you lazy fucks who can't bother to check TAP menu everyday.")
+    bot.send_document(chat_id=update.message.chat_id, document="doc_2018-05-09_00-25-41")
 
 
 def which_bar(bot, update):
