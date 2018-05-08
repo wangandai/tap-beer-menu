@@ -1,5 +1,6 @@
 from telegram.ext import Updater
-from telegram.ext import CommandHandler, ConversationHandler, CallbackQueryHandler
+from telegram.ext import CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler
+from telegram.ext import Filters
 import logging
 import telegram_bot.telegram_bot_handlers as h
 import config.config as cfg
@@ -29,6 +30,7 @@ def init_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('start', h.start))
     dispatcher.add_handler(CommandHandler('subscribe', h.subscribe))
     dispatcher.add_handler(CommandHandler('unsubscribe', h.unsubscribe))
+    dispatcher.add_handler(MessageHandler(filters=Filters.document, callback=h.log_document))
 
 
 def main():

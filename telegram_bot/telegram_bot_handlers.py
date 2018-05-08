@@ -4,6 +4,7 @@ from entities.subscriber_manager import SubscriberManager
 from telegram_bot import telegram_bot_util as util
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from menu_apis.apis import bars
+import random
 
 
 mm = MenuReader(bars)
@@ -12,7 +13,11 @@ ss = SubscriberManager()
 
 def start(bot, update):
     logging.info("telegram_bot_handlers.start called")
-    bot.send_document(chat_id=update.message.chat_id, document="doc_2018-05-09_00-25-41")
+    with open("resources/gifs.txt", "r") as f:
+        lines = f.readlines()
+        lines = set([l.strip() for l in lines])
+    doc = random.sample(lines, 1)[0]
+    bot.send_document(chat_id=update.message.chat_id, document=doc)
 
 
 def which_bar(bot, update):
@@ -73,3 +78,11 @@ def unsubscribe(bot, update):
     except:
         message = "You have not been successfully un-subscribed."
     bot.send_message(chat_id=chat_id, text=message)
+
+
+def log_document(bot, update):
+    file_id = update.message["document"]["file_id"]
+    logging.info(file_id)
+    with open("resources/gifs.txt", "a+") as f:
+        f.write(file_id)
+        f.write("\n")
