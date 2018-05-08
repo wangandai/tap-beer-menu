@@ -40,7 +40,7 @@ class Untappd:
 
         r1 = requests.get(self.url, headers=h1)
         self.cookies = r1.cookies
-        return r1.content
+        return r1.content.decode('utf-8')
 
     def request_for_section(self, section_id):
         h2 = {
@@ -58,7 +58,7 @@ class Untappd:
                           headers=h2,
                           params=params,
                           cookies=self.cookies)
-        return r2.content
+        return r2.content.decode('utf-8')
 
     def load_section(self, section_id):
         loaded_content = self.request_for_section(section_id)
