@@ -32,6 +32,7 @@ def get_menu(bot, update):
     requested_bar = query.data
     logging.info("Menu for {} was requested.".format(requested_bar))
 
+    mm.refresh_menu(requested_bar)
     m = mm.get_menu_of(requested_bar)
     text = util.display_whole_menu(m)
     bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
