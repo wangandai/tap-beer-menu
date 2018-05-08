@@ -17,7 +17,7 @@ def start(bot, update):
         lines = f.readlines()
         lines = set([l.strip() for l in lines])
     doc = random.sample(lines, 1)[0]
-    bot.send_document(chat_id=update.message.chat_id, document=doc)
+    bot.send_document(chat_id=update.message.chat_id, document=doc, caption="Hello!")
 
 
 def which_bar(bot, update):
