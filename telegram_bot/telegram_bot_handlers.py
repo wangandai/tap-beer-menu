@@ -6,7 +6,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from menu_apis.apis import bars
 
 
-mm = MenuReader()
+mm = MenuReader(bars)
 ss = SubscriberManager()
 
 
@@ -19,7 +19,7 @@ def which_bar(bot, update):
     chat_id = update.message.chat_id
 
     button_list = [InlineKeyboardButton(bar, callback_data=bar) for bar in bars.keys()]
-    reply_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=1))
+    reply_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=2))
 
     bot.send_message(chat_id=chat_id, text="Which bar?", reply_markup=reply_markup)
     return util.get_command(update.message.text)
@@ -33,8 +33,8 @@ def get_menu(bot, update):
     logging.info("Menu for {} was requested.".format(requested_bar))
 
     m = mm.get_menu_of(requested_bar)
-    text = util.beer_list_in_text(m.beers)
-    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
+    text = util.display_whole_menu(m)
+    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
 
 
 def should_i_go(bot, update):
@@ -48,8 +48,8 @@ def should_i_go(bot, update):
     if not menu.is_worth_going():
         text = "No, its shit today."
     else:
-        text = "Yes, go today. The good beers are:\n" + util.beer_list_in_text(menu.good_beers)
-    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
+        text = util.good_beers_in_text(requested_bar, menu.find_good_beers())
+    bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
 
 
 def subscribe(bot, update):

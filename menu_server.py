@@ -17,16 +17,16 @@ def main():
     mm = MenuManager()
 
     def update_job():
-        mm.update_menus()
+        # mm.update_menus()
         ss.notify_good_bars(mm.find_good_bars())
 
-    update_timings = [str(n) + ":00" for n in range(12, 23)]
+    update_timings = [str(n) + ":00" for n in range(12, 13)]
     for t in update_timings:
         logging.info("Setting up scheduled updates for time: {}".format(t))
         schedule.every().day.at(t).do(update_job)
 
     # For testing
-    # schedule.run_all(5)
+    schedule.run_all(5)
 
     logging.info("Sleeping.")
     while True:

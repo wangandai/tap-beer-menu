@@ -37,7 +37,6 @@ class TestMenu(unittest.TestCase):
                     "brewery": "Here"
                 }]
             }],
-            "__time_updated": None,
         }
         self.assertEqual(menu.to_dict(), menu_dict)
 
@@ -63,7 +62,6 @@ class TestMenu(unittest.TestCase):
                     "brewery": "Here"
                 }]
             }],
-            "__time_updated": None,
         }
         self.assertEqual(menu, Menu().from_dict(menu_dict))
 
@@ -86,6 +84,7 @@ class TestMenu(unittest.TestCase):
         self.assertNotEqual(menu_1, menu_6)
 
     def test_SaveLoad(self):
+        os.chdir("..")
         menu_1 = Menu("TestBar", [MenuSection("1", "Title1", [Beer("name", "style", 8.0, "brewery")])])
         menu_1.save_beers_to_file()
         self.assertEqual(os.path.isfile(menu_1.data_file()), True)
@@ -103,6 +102,18 @@ class TestMenu(unittest.TestCase):
         menu_2 = Menu("TestBar", [MenuSection("1", "Title1", [Beer("Crap", "Stout", 8.0, "Crap"),
                                                               Beer("Shit", "Stout", 8.0, "Shit")])])
         self.assertEqual([], menu_2.find_good_beers())
+
+    def test_Notify(self):
+        section = MenuSection("123", "Beers")
+        section.beers.append(Beer("One beer", "From", 18.0, "Founders"))
+        section.beers.append(Beer("Two beer", "From", 9.0, "Here"))
+        menu = Menu("Bar", [section])
+        self.assertIsNone(menu.get_time_notified())
+        self.assertIsNotNone(menu.notify_good_beers())
+
+        self.assertIsNotNone(menu.get_time_notified())
+        self.assertIsNone(menu.notify_good_beers())
+        self.assertGreater(menu.get_time_notified(), menu.get_time_updated())
 
 
 if __name__ == "__main__":

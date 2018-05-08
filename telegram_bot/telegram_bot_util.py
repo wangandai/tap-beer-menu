@@ -5,9 +5,36 @@ def beer_list_in_text(beers):
     if len(beers) == 0:
         return "No beers available."
     text = ""
-    for i, beer in enumerate(beers):
-        text += "{}. {} ({}) - {}% ABV\n".format(i+1, beer.name, beer.type, beer.abv)
+    for beer in beers:
+        text += "---\n" \
+                "{}\n" \
+                "{}% ABV\n" \
+                "{}\n" \
+                "{}\n".format(beer.name, beer.abv, beer.style, beer.brewery)
     return text
+
+
+def good_beers_in_text(bar_name, sections):
+    message = ""
+    message += "*At {} bar:*\n".format(bar_name)
+    for section in sections:
+        title = trim_section_title(section["section"])
+        message += "_{}_\n{}\n\n".format(title, beer_list_in_text(section["good_beers"]))
+    return message
+
+
+def section_in_text(section_title, beer_list):
+    message = ""
+    title = trim_section_title(section_title)
+    message += "_{}_\n{}\n".format(title, beer_list_in_text(beer_list))
+    return message
+
+
+def display_whole_menu(menu):
+    message = "*{}*\n".format(menu.bar)
+    for section in menu.sections:
+        message += section_in_text(section.title, section.beers)
+    return message
 
 
 def build_menu(buttons,
@@ -29,3 +56,7 @@ def get_command(text):
         return matched.group(1)
     else:
         return text
+
+
+def trim_section_title(title):
+    return title.split("(")[0].strip()

@@ -14,18 +14,18 @@ class MenuManager:
 
     def update_menus(self):
         for m in self.menus:
-            updated_m = apis.bars[m.name]()
+            updated_m = apis.bars[m.bar]()
             if m == updated_m:
-                logging.info("Menu({}) has not changed since last checked.".format(m.name))
+                logging.info("Menu({}) has not changed since last checked.".format(m.bar))
                 continue
             m = updated_m
             m.save_beers_to_file()
         logging.info("Menus refreshed.")
 
     def find_good_bars(self):
-        worth_going_menus = []
+        worth_going_menus = {}
         for m in self.menus:
-            logging.info("Menu({}) updated since last checked: {}".format(m.name, m.was_updated))
-            if m.is_worth_going() and m.was_updated:
-                worth_going_menus.append(m)
+            good_beers = m.notify_good_beers()
+            if good_beers is not None:
+                worth_going_menus[m.bar] = good_beers
         return worth_going_menus

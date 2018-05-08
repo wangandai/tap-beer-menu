@@ -1,7 +1,7 @@
 import logging
 import config.config as cfg
 import json
-from telegram_bot.telegram_bot_util import beer_list_in_text
+from telegram_bot.telegram_bot_util import beer_list_in_text, trim_section_title, good_beers_in_text
 
 
 class SubscriberNotifier:
@@ -24,16 +24,21 @@ class SubscriberNotifier:
         subscribers = self._load_subscribers()
         if len(subscribers) > 0:
             for subscriber in subscribers:
-                self.bot.send_message(chat_id=subscriber, text=text)
+                self.bot.send_message(chat_id=subscriber, text=text, parse_mode="Markdown")
             logging.info("Notified {} subscribers.".format(len(subscribers)))
         else:
             logging.info("No subscribers to notify.")
 
     def notify_good_bars(self, good_bars):
-        if len(good_bars) > 0:
-            message = "There are good beers today.\n\n"
-            for good_bar in good_bars:
-                message += "At {} bar:\n{}".format(good_bar.name, beer_list_in_text(good_bar.good_beers))
+        message = ""
+        for good_bar, sections in good_bars.items():
+            if len(sections) == 0:
+                continue
+            message += good_beers_in_text(good_bar, sections)
+
+        if message is not "":
+            message = "There are good beers today.\n\n" + message
+            print(message)
             self.send_to_subscribers(message)
             logging.info("Notified subscribers about {} good bars.".format(len(good_bars)))
         else:

@@ -91,7 +91,7 @@ class Untappd:
             beers = beer_list[0].getchildren()
             # If not all beers are loaded
             if len(section.find_class("show-more-section")) > 0:
-                logging.info("Loading more beers for {}.".format(section_id_string))
+                logging.debug("Loading more beers for {}.".format(section_id_string))
                 beers += self.load_section(section_id)
 
             # There are beers in this section
@@ -109,8 +109,6 @@ class Untappd:
                                          brewery.text_content())
                                     )
                 m.sections.append(ms)
-            else:
-                logging.info("This section has no beers.")
         return m
 
     def get_menu(self):
