@@ -31,7 +31,7 @@ def main():
     logging.info("Sleeping.")
     while True:
         schedule.run_pending()
-        time.sleep(50)
+        time.sleep(30)
 
 
 if __name__ == "__main__":
