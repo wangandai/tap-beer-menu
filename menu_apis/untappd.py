@@ -113,3 +113,16 @@ class Untappd:
 
     def get_menu(self):
         return self.build_menu_from_html(self.get_page())
+
+    @staticmethod
+    def sanitize_markdown_characters(text):
+        markdown_unicode = {
+            "*": "\u002A",
+            "_": "\u005F",
+            "[": "\u005B",
+            "]": "\u005D",
+            "`": "\u0060",
+        }
+        for c, u in markdown_unicode:
+            text = text.replace(c, u)
+        return text

@@ -20,7 +20,7 @@ def main():
         mm.update_menus()
         ss.notify_good_bars(mm.find_good_bars())
 
-    update_timings = [str(n) + ":00" for n in range(12, 24)]
+    update_timings = [str(n) + ":00" for n in range(12, 24, 2)]
     for t in update_timings:
         logging.info("Setting up scheduled updates for time: {}".format(t))
         schedule.every().day.at(t).do(update_job)
