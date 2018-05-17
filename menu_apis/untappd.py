@@ -86,7 +86,7 @@ class Untappd:
             # Get section details
             section_id_string = section.get("id")
             section_id = re.search("section_(.+?)$", section_id_string).group(1)
-            title = section.find_class("menu-section-header")[0].text_content()
+            title = self.sanitize_markdown_characters(section.find_class("menu-section-header")[0].text_content())
             beer_list = section.find_class("menu-section-list")
             beers = beer_list[0].getchildren()
             # If not all beers are loaded
@@ -103,10 +103,10 @@ class Untappd:
                     name, style = h5.getchildren()
                     abv = h6.getchildren()[0]
                     brewery = h6.getchildren()[0].getchildren()[0]
-                    ms.beers.append(Beer(name.text_content(),
-                                         style.text_content(),
-                                         self.get_abv_from_span(abv.text_content()),
-                                         brewery.text_content())
+                    ms.beers.append(Beer(self.sanitize_markdown_characters(name.text_content()),
+                                         self.sanitize_markdown_characters(style.text_content()),
+                                         self.sanitize_markdown_characters(self.get_abv_from_span(abv.text_content())),
+                                         self.sanitize_markdown_characters(brewery.text_content()))
                                     )
                 m.sections.append(ms)
         return m
@@ -117,12 +117,15 @@ class Untappd:
     @staticmethod
     def sanitize_markdown_characters(text):
         markdown_unicode = {
-            "*": "\u002A",
-            "_": "\u005F",
-            "[": "\u005B",
-            "]": "\u005D",
-            "`": "\u0060",
+            "*": "\*",
+            "_": "\_",
+            "[": "\[",
+            "]": "\]",
+            "`": "\`",
         }
-        for c, u in markdown_unicode:
-            text = text.replace(c, u)
+        for c, u in markdown_unicode.items():
+            try:
+                text = text.replace(c, u)
+            except AttributeError:
+                return text
         return text
