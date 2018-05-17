@@ -86,3 +86,9 @@ def log_document(bot, update):
     with open("resources/gifs.txt", "a+") as f:
         f.write(file_id)
         f.write("\n")
+
+
+def send_error(bot, update, error):
+    creator_chat_id = 214490769
+    error_text = "Error: {}\nUpdate: \n{}".format(str(error), str(update))
+    bot.send_message(chat_id=creator_chat_id, text=error_text)

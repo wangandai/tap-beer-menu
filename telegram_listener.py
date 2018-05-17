@@ -31,6 +31,7 @@ def init_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('subscribe', h.subscribe))
     dispatcher.add_handler(CommandHandler('unsubscribe', h.unsubscribe))
     dispatcher.add_handler(MessageHandler(filters=Filters.document, callback=h.log_document))
+    dispatcher.add_error_handler(h.send_error)
 
 
 def main():
