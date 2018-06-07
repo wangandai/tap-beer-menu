@@ -93,27 +93,24 @@ class TestMenu(unittest.TestCase):
         self.assertEqual(menu_1, menu_2)
 
     def test_FindGoodBeers(self):
-        menu_1 = Menu("TestBar", [MenuSection("1", "Title1", [Beer("Founders", "Stout", 8.0, "Founders"),                                                    Beer("Shit", "Stout", 8.0, "Shit")])])
-        gd_beers = [{
-            "section": "Title1",
-            "good_beers": [Beer("Founders", "Stout", 8.0, "Founders")]
-        }]
+        menu_1 = Menu("TestBar", [MenuSection("1", "Title1", [Beer("Founders", "Stout", 8.0, "Founders"), Beer("Shit", "Stout", 8.0, "Shit")])])
+        gd_beers = Menu("TestBar", [MenuSection("1", "Title1", [Beer("Founders", "Stout", 8.0, "Founders")])])
         self.assertEqual(gd_beers, menu_1.find_good_beers())
         menu_2 = Menu("TestBar", [MenuSection("1", "Title1", [Beer("Crap", "Stout", 8.0, "Crap"),
                                                               Beer("Shit", "Stout", 8.0, "Shit")])])
-        self.assertEqual([], menu_2.find_good_beers())
+        self.assertEqual(None, menu_2.find_good_beers())
 
-    def test_Notify(self):
-        section = MenuSection("123", "Beers")
-        section.beers.append(Beer("One beer", "From", 18.0, "Founders"))
-        section.beers.append(Beer("Two beer", "From", 9.0, "Here"))
-        menu = Menu("Bar", [section])
-        self.assertIsNone(menu.get_time_notified())
-        self.assertIsNotNone(menu.notify_good_beers())
-
-        self.assertIsNotNone(menu.get_time_notified())
-        self.assertIsNone(menu.notify_good_beers())
-        self.assertGreater(menu.get_time_notified(), menu.get_time_updated())
+    # def test_Notify(self):
+    #     section = MenuSection("123", "Beers")
+    #     section.beers.append(Beer("One beer", "From", 18.0, "Founders"))
+    #     section.beers.append(Beer("Two beer", "From", 9.0, "Here"))
+    #     menu = Menu("Bar", [section])
+    #     self.assertIsNone(menu.get_time_notified())
+    #     self.assertIsNotNone(menu.notify_good_beers())
+    #
+    #     self.assertIsNotNone(menu.get_time_notified())
+    #     self.assertIsNone(menu.notify_good_beers())
+    #     self.assertGreater(menu.get_time_notified(), menu.get_time_updated())
 
 
 if __name__ == "__main__":

@@ -10,38 +10,24 @@ from datetime import datetime
 class Menu:
     bar = ""
     sections = None
-    __time_updated = None
-    __time_notified = None
+    # notified = False
 
     def __init__(self, bar="", sections=None):
         self.bar = bar
         self.sections = sections
         if self.sections is None:
             self.sections = []
-        self.__time_updated = datetime.now()
-        self.__time_notified = None
-
-    def get_time_updated(self):
-        return self.__time_updated
-
-    def get_time_notified(self):
-        return self.__time_notified
+        # self.notified = False
 
     def find_good_beers(self):
-        return [{
-            "section": s.title,
-            "good_beers": s.good_beers()
-        } for s in self.sections if len(s.good_beers()) > 0]
+        sections = [MenuSection(s.section_id, s.title, s.good_beers()) for s in self.sections if len(s.good_beers()) > 0]
+        if len(sections) > 0:
+            return Menu(self.bar, sections)
 
-    def notify_good_beers(self):
-        if self.__time_notified is None or self.__time_updated > self.__time_notified:
-            self.__time_notified = datetime.now()
-            if self.is_worth_going():
-                return self.find_good_beers()
-        return None
-
-    def is_worth_going(self):
-        return len(self.find_good_beers()) > 0
+    # def notify_good_beers(self):
+    #     if self.notified is False:
+    #         return self.find_good_beers()
+    #     return None
 
     def data_file(self):
         return cfg.open_data_file(str.lower(self.bar).replace(" ", "") + "_menu.json")
