@@ -6,6 +6,7 @@ import schedule
 from entities.menu_manager import MenuManager
 from entities.subscriber_notifier import SubscriberNotifier
 from logger_setup import setup_logger
+from menu_apis.apis import bars
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
     b = Bot(token=cfg.get_bot_token())
     ss = SubscriberNotifier(b)
 
-    mm = MenuManager()
+    mm = MenuManager(bars)
 
     def update_job():
         mm.update_menus()

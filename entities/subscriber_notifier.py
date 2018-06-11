@@ -1,7 +1,7 @@
 import logging
 import config.config as cfg
 import json
-from telegram_bot.telegram_bot_util import beer_list_in_text, trim_section_title, good_beers_in_text
+import telegram_bot.telegram_bot_util as util
 
 
 class SubscriberNotifier:
@@ -31,10 +31,7 @@ class SubscriberNotifier:
 
     def notify_good_bars(self, good_bars):
         message = ""
-        for good_bar, sections in good_bars.items():
-            if len(sections) == 0:
-                continue
-            message += good_beers_in_text(good_bar, sections)
+        message += util.multiple_menus_to_markdown(good_bars)
 
         if message is not "":
             message = "There are good beers today.\n\n" + message

@@ -51,16 +51,17 @@ def should_i_go(bot, update):
     logging.info("ShouldIGo for {} was requested.".format(requested_bar))
 
     menu = mm.get_menu_of(requested_bar)
-    if not menu.is_worth_going():
+    good_beers = menu.find_good_beers()
+    if good_beers is None:
         text = "No, its shit today."
     else:
-        text = util.menu_to_markdown(menu.find_good_beers())
+        text = util.menu_to_markdown(good_beers)
     bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
 
 
 def where_to_go(bot, update):
-    query = update.callback_query
-    chat_id = query.message.chat_id
+    logging.info("telegram_bot_handlers.wheretogo called")
+    chat_id = update.message.chat_id
 
     menus = mm.find_good_bars()
     message = util.multiple_menus_to_markdown(menus)

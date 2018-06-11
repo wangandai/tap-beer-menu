@@ -23,9 +23,9 @@ class TestTelegramBotUtil(unittest.TestCase):
                   "IPA\n" \
                   "Stone\n"
     section_1_text = "_On Tap_ (2 Beers)\n" \
-                    "---Beer 1---\n" \
+                    "   ---Beer 1---\n" \
                     "{}" \
-                    "---Beer 2---\n" \
+                    "   ---Beer 2---\n" \
                     "{}".format(beer_1_text, beer_2_text)
     menu_1_text = "*TAP*\n" \
                   "{}".format(section_1_text)
@@ -50,5 +50,4 @@ class TestTelegramBotUtil(unittest.TestCase):
             "TAP": self.menu_1,
             "FooBar": self.menu_2
         })
-        print(actual_text)
         self.assertEqual(actual_text, self.menu_1_text + "\n" + self.menu_2_text)

@@ -38,10 +38,10 @@ def section_to_markdown(section_obj):
     if len(section_obj.beers) == 0:
         return ""
 
-    plural = "s" if len(section_obj.beers) > 0 else ""
+    plural = "s" if len(section_obj.beers) != 1 else ""
     text = "_{}_ ({} Beer{})\n".format(trim_section_title(section_obj.title), len(section_obj.beers), plural)
     for i, beer in enumerate(section_obj.beers):
-        text += "---Beer {}---\n".format(i+1)
+        text += "   ---Beer {}---\n".format(i+1)
         text += beer_to_markdown(beer)
     return text
 
