@@ -10,7 +10,8 @@ from logger_setup import setup_logger
 commands:
 start - Get welcome message
 menu - Get today's menu
-shouldigo - Check if today is worth going
+shouldigo - Check if a bar is worth going
+wheretogo - List all bars worth going
 subscribe - Subscribe to notifications on whether worth going
 unsubscribe - Unsubscribe to notifications
 """
@@ -28,6 +29,7 @@ def init_handlers(dispatcher):
         allow_reentry=True,
     ))
     dispatcher.add_handler(CommandHandler('start', h.start))
+    dispatcher.add_handler(CommandHandler('wheretogo', h.where_to_go))
     dispatcher.add_handler(CommandHandler('subscribe', h.subscribe))
     dispatcher.add_handler(CommandHandler('unsubscribe', h.unsubscribe))
     dispatcher.add_handler(MessageHandler(filters=Filters.document, callback=h.log_document))

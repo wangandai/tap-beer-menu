@@ -1,31 +1,40 @@
 import logging
-import menu_apis.apis as apis
 
 
 class MenuManager:
-    menus = []
+    menus = {}
+    notified = {}
+    apis = {}
 
-    def __init__(self):
-        for bar in apis.bars.keys():
-            new_menu = apis.bars[bar]()
-            new_menu.save_beers_to_file()
-            self.menus.append(new_menu)
+    def __init__(self, api_dict):
+        self.init_menus(api_dict)
+        self.apis = api_dict
         logging.debug("MenuManager: MenuManager Initialized.")
+
+    def init_menus(self, api_dict):
+        for bar in api_dict:
+            new_menu = api_dict[bar]()
+            new_menu.save_beers_to_file()
+            self.menus[bar] = new_menu
+            self.notified[bar] = False
 
     def update_menus(self):
         for m in self.menus:
-            updated_m = apis.bars[m.bar]()
-            if m == updated_m:
-                logging.info("Menu({}) has not changed since last checked.".format(m.bar))
+            updated_m = self.apis[m]()
+            if self.menus[m] == updated_m:
+                logging.info("Menu({}) has not changed since last checked.".format(m))
                 continue
-            m = updated_m
-            m.save_beers_to_file()
+            else:
+                self.menus[m] = updated_m
+                self.menus[m].save_beers_to_file()
+                self.notified[m] = False
         logging.info("Menus refreshed.")
 
     def find_good_bars(self):
         worth_going_menus = {}
         for m in self.menus:
-            good_beers = m.notify_good_beers()
-            if good_beers is not None:
-                worth_going_menus[m.bar] = good_beers
+            good_menu = self.menus[m].find_good_beers()
+            if self.notified[m] is not True and good_menu is not None:
+                worth_going_menus[m] = good_menu
+                self.notified[m] = True
         return worth_going_menus

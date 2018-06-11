@@ -39,7 +39,7 @@ def get_menu(bot, update):
 
     mm.refresh_menu(requested_bar)
     m = mm.get_menu_of(requested_bar)
-    text = util.display_whole_menu(m)
+    text = util.menu_to_markdown(m)
     bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
 
 
@@ -54,8 +54,17 @@ def should_i_go(bot, update):
     if not menu.is_worth_going():
         text = "No, its shit today."
     else:
-        text = util.good_beers_in_text(requested_bar, menu.find_good_beers())
+        text = util.menu_to_markdown(menu.find_good_beers())
     bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text, parse_mode="Markdown")
+
+
+def where_to_go(bot, update):
+    query = update.callback_query
+    chat_id = query.message.chat_id
+
+    menus = mm.find_good_bars()
+    message = util.multiple_menus_to_markdown(menus)
+    bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
 def subscribe(bot, update):

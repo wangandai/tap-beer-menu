@@ -52,7 +52,7 @@ class Menu:
             logging.info("Menu({}) successfully saved to file.".format(self.bar))
         except (IOError, ValueError):
             logging.error(save_data)
-            logging.error("Error saving data file for {} menu: {}".format(self.bar, sys.exc_info()[0]))
+            logging.error("Error saving data file for {} menu ({}): {}".format(self.bar, self.data_file(), sys.exc_info()[0]))
 
     def __eq__(self, other):
         """Override the default Equals behavior"""

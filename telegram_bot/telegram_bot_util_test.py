@@ -12,6 +12,7 @@ class TestTelegramBotUtil(unittest.TestCase):
     section_1 = MenuSection("111", "On Tap (2 bier)", [beer_1, beer_2])
     empty_section = MenuSection("222", "Empty", [])
     menu_1 = Menu("TAP", [section_1, empty_section])
+    menu_2 = Menu("FooBar", [section_1, empty_section])
 
     beer_1_text = "Breakfast Stout\n" \
                     "8.6% ABV\n" \
@@ -29,6 +30,9 @@ class TestTelegramBotUtil(unittest.TestCase):
     menu_1_text = "*TAP*\n" \
                   "{}".format(section_1_text)
 
+    menu_2_text = "*FooBar*\n" \
+                  "{}".format(section_1_text)
+
     def test_beer_in_markdown(self):
         actual_text = util.beer_to_markdown(self.beer_1)
         self.assertEqual(actual_text, self.beer_1_text)
@@ -40,3 +44,11 @@ class TestTelegramBotUtil(unittest.TestCase):
     def test_menu_in_markdown(self):
         actual_text = util.menu_to_markdown(self.menu_1)
         self.assertEqual(actual_text, self.menu_1_text)
+
+    def test_multiple_menus_in_markdown(self):
+        actual_text = util.multiple_menus_to_markdown({
+            "TAP": self.menu_1,
+            "FooBar": self.menu_2
+        })
+        print(actual_text)
+        self.assertEqual(actual_text, self.menu_1_text + "\n" + self.menu_2_text)

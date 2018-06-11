@@ -1,42 +1,6 @@
 import re
 
 
-def beer_list_in_text(beers):
-    if len(beers) == 0:
-        return "No beers available."
-    text = ""
-    for beer in beers:
-        text += "---\n" \
-                "{}\n" \
-                "{}% ABV\n" \
-                "{}\n" \
-                "{}\n".format(beer.name, beer.abv, beer.style, beer.brewery)
-    return text
-
-
-def good_beers_in_text(bar_name, sections):
-    message = ""
-    message += "*At {} bar:*\n".format(bar_name)
-    for section in sections:
-        title = trim_section_title(section["section"])
-        message += "_{}_\n{}\n\n".format(title, beer_list_in_text(section["good_beers"]))
-    return message
-
-
-def section_in_text(section_title, beer_list):
-    message = ""
-    title = trim_section_title(section_title)
-    message += "_{}_\n{}\n".format(title, beer_list_in_text(beer_list))
-    return message
-
-
-def display_whole_menu(menu):
-    message = "*{}*\n".format(menu.bar)
-    for section in menu.sections:
-        message += section_in_text(section.title, section.beers)
-    return message
-
-
 def build_menu(buttons,
                n_cols,
                header_buttons=None,
@@ -86,4 +50,13 @@ def menu_to_markdown(menu_obj):
     text = "*{}*\n".format(menu_obj.bar)
     for section in menu_obj.sections:
         text += section_to_markdown(section)
+    return text
+
+
+def multiple_menus_to_markdown(menu_dict):
+    text = ""
+    for menu in menu_dict:
+        if text != "":
+            text += "\n"
+        text += menu_to_markdown(menu_dict[menu])
     return text
