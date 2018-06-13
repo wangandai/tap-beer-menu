@@ -31,10 +31,15 @@ class MenuManager:
         logging.info("Menus refreshed.")
 
     def find_good_bars(self):
+        should_notify = False
         worth_going_menus = {}
         for m in self.menus:
             good_menu = self.menus[m].find_good_beers()
-            if self.notified[m] is not True and good_menu is not None:
+            if good_menu is not None:
                 worth_going_menus[m] = good_menu
-                self.notified[m] = True
-        return worth_going_menus
+                if self.notified[m] is not True:
+                    self.notified[m] = True
+                    should_notify = True
+        if should_notify:
+            return worth_going_menus
+        return {}
