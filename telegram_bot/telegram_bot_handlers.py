@@ -65,6 +65,8 @@ def where_to_go(bot, update):
 
     menus = mm.find_good_bars()
     message = util.multiple_menus_to_markdown(menus)
+    if message.length == 0:
+        message = "All bars are shitty today."
     bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
 
 
